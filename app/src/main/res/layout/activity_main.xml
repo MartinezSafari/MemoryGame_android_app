@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <FrameLayout
+    <org.thereachtrust.memorygame_android_app.SquareFrameLayout
         android:id="@+id/gameLayout"
         android:layout_width="0dp"
-        android:layout_height="366dp"
+        android:layout_height="450dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </FrameLayout>
+    </org.thereachtrust.memorygame_android_app.SquareFrameLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/restartButton"
