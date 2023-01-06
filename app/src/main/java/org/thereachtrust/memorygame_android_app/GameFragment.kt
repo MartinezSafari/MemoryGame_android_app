@@ -4,19 +4,23 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class GameFragment : Fragment()
+class GameFragment (var gridSize: Int): Fragment()
 {
     interface GameFragmentListener
     {
-        fun makeTiles(): ArrayList<TextView>
+        fun makeTiles(): ArrayList<Tile>
+
+        fun tileTapped(tile: Tile, index: Int)
     }
     private lateinit var caller: GameFragmentListener
 
@@ -40,26 +44,30 @@ class GameFragment : Fragment()
 
         val context: Context= activity as Context
         val recyclerView: RecyclerView= frag.findViewById(R.id.gameRv)
-        recyclerView.layoutManager= GridLayoutManager(context, 4)
 
-        val textViews= caller.makeTiles()
-        recyclerView.adapter= GameRecyclerAdapter(textViews)
+
+        recyclerView.layoutManager= GridLayoutManager(context, gridSize)
+
+        val tiles= caller.makeTiles()
+        recyclerView.adapter= GameRecyclerAdapter(tiles)
 
         return frag
     }
 
     companion object {
 
-        fun newInstance(): GameFragment
+        fun newInstance(grid: Int): GameFragment
         {
-            return GameFragment()
+            return GameFragment(grid)
 
         }
     }
 
-    internal inner class GameRecyclerAdapter (val inputData: ArrayList<TextView>):
-    RecyclerView.Adapter<GameRecyclerAdapter.RecyclerViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
+    internal inner class GameRecyclerAdapter (val inputData: ArrayList<Tile>):
+    RecyclerView.Adapter<GameRecyclerAdapter.RecyclerViewHolder>()
+    {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder
+        {
             val inflater = LayoutInflater.from(parent.context)
             val vh = RecyclerViewHolder(inflater, parent)
             return vh
@@ -67,10 +75,23 @@ class GameFragment : Fragment()
 
         override fun getItemCount(): Int = inputData.size
 
-        override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: RecyclerViewHolder, position: Int)
+        {
             val thisTile = inputData[position]
 
+            val params= FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT)
+            thisTile.layoutParams= params
+            params.setMargins(5,5,5,5)
+            thisTile.gravity= Gravity.CENTER
+            thisTile.textSize= 24F
+
             holder.tileParent.addView(thisTile)
+
+            holder.tileParent.setOnClickListener{
+                caller.tileTapped(thisTile, position)
+
+            }
         }
 
 
