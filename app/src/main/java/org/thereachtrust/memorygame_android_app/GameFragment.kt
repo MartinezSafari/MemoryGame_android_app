@@ -14,7 +14,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class GameFragment : Fragment()
+class GameFragment (var gridSize: Int): Fragment()
 {
     interface GameFragmentListener
     {
@@ -44,7 +44,9 @@ class GameFragment : Fragment()
 
         val context: Context= activity as Context
         val recyclerView: RecyclerView= frag.findViewById(R.id.gameRv)
-        recyclerView.layoutManager= GridLayoutManager(context, 4)
+
+
+        recyclerView.layoutManager= GridLayoutManager(context, gridSize)
 
         val tiles= caller.makeTiles()
         recyclerView.adapter= GameRecyclerAdapter(tiles)
@@ -54,9 +56,9 @@ class GameFragment : Fragment()
 
     companion object {
 
-        fun newInstance(): GameFragment
+        fun newInstance(grid: Int): GameFragment
         {
-            return GameFragment()
+            return GameFragment(grid)
 
         }
     }
@@ -64,7 +66,8 @@ class GameFragment : Fragment()
     internal inner class GameRecyclerAdapter (val inputData: ArrayList<Tile>):
     RecyclerView.Adapter<GameRecyclerAdapter.RecyclerViewHolder>()
     {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder
+        {
             val inflater = LayoutInflater.from(parent.context)
             val vh = RecyclerViewHolder(inflater, parent)
             return vh

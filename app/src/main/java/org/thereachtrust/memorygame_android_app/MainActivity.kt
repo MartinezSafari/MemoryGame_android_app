@@ -11,6 +11,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), GameFragment.GameFragmentListener
 {
+    var gridSize= 6
+
     private var thisSecondTap = false
     private lateinit var tile1: Tile
     private lateinit var tile2: Tile
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity(), GameFragment.GameFragmentListener
             foundTiles.add(tile1)
             foundTiles.add(tile2)
 
-            if(foundTiles.size == 16){
+            if(foundTiles.size == gridSize * gridSize){
                 // won game
                 Toast.makeText(this, "YOU WON !!", Toast.LENGTH_LONG).show()
             }
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity(), GameFragment.GameFragmentListener
                 .remove(frag).commit()
         }
         supportFragmentManager.beginTransaction()
-            .add(R.id.gameLayout, GameFragment.newInstance(),
+            .add(R.id.gameLayout, GameFragment.newInstance(gridSize),
                 "game").commit()
 
 
@@ -96,11 +98,16 @@ class MainActivity : AppCompatActivity(), GameFragment.GameFragmentListener
 
    override fun makeTiles(): ArrayList<Tile>{
         val tilesArray: ArrayList<Tile> = ArrayList()
-        for (i in 1..16){
 
-            var num= i
-            if (num> 8)
-                num-=8
+        val totalGrid= gridSize * gridSize
+        val halfGrid= totalGrid/2
+
+        for (i in 1..totalGrid)
+        {
+
+            var num = i
+            if (num > halfGrid)
+                num -= halfGrid
 
             val newTile= Tile(this, num)
            newTile.updateTile()
