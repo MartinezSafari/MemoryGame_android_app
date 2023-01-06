@@ -7,21 +7,28 @@ import android.widget.TextView
 
 class MainActivity : AppCompatActivity(), GameFragment.GameFragmentListener
 {
+    override fun tileTapped(tile: Tile, index: Int)
+    {
+        tile.tileStatus= Status.FLIPPED
+        tile.updateTile()
+    }
 
-
-   override fun makeTiles(): ArrayList<TextView>{
-        val tilesArray: ArrayList<TextView> = ArrayList()
+   override fun makeTiles(): ArrayList<Tile>{
+        val tilesArray: ArrayList<Tile> = ArrayList()
         for (i in 1..16){
-            val newTile= TextView(this)
-            newTile.text= "Hi"
-            newTile.setTextColor(Color.BLACK )
-            newTile.setBackgroundColor(Color.RED)
+
+            var num= i
+            if (num> 8)
+                num-=8
+
+            val newTile= Tile(this, num)
+           newTile.updateTile()
 
             tilesArray.add(newTile)
         }
+       tilesArray.shuffle()
         return tilesArray
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
